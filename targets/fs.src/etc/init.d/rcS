@@ -1,0 +1,15 @@
+#! /bin/sh
+
+PATH=/sbin:/bin
+export PATH
+mount -t proc proc /proc
+mount -t tmpfs none /var
+mount -t usbfs none /proc/bus/usb
+
+/bin/mount -a
+
+#/sbin/inetd
+
+mkdir /var/tmp
+mkdir /var/samba
+hostname localhost

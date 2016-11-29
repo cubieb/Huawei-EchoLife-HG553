@@ -1,0 +1,29 @@
+#
+# Makefile for generic Broadcom MIPS boards
+#
+# Copyright (C) 2004 Broadcom Corporation
+#
+obj-y           := irq.o prom.o setup.o
+
+SRCBASE         := $(TOPDIR)
+EXTRA_CFLAGS    += -I$(INC_BRCMBOARDPARMS_PATH)/$(BRCM_BOARD) -I$(SRCBASE)/include -I$(INC_BRCMDRIVER_PUB_PATH)/$(BRCM_BOARD) -I$(INC_BRCMSHARED_PUB_PATH)/$(BRCM_BOARD)
+#EXTRA_CFLAGS    += -I$(INC_ADSLDRV_PATH) -DDBG
+#EXTRA_CFLAGS    += -I$(INC_ADSLDRV_PATH) 
+
+ifeq ($(CONFIG_BCM95354),y)
+EXTRA_CFLAGS	+= -I$(HND_INC_DIR) -DBCMDRIVER -I$(INC_DRIVER_VENDOR_DIR)
+else
+EXTRA_CFLAGS	+= -DBCMDRIVER -I$(INC_DRIVER_VENDOR_DIR) -I$(INC_ADSLDRV_PATH)
+endif
+
+
+ifeq "$(ADSL)" "ANNEX_B"
+EXTRA_CFLAGS += -DADSL_ANNEXB
+endif
+ifeq "$(ADSL)" "SADSL"
+EXTRA_CFLAGS += -DADSL_SADSL
+endif
+ifeq "$(ADSL)" "ANNEX_C"
+EXTRA_CFLAGS += -DADSL_ANNEXC
+endif
+

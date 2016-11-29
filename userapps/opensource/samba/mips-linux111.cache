@@ -1,0 +1,10 @@
+ac_cv_func_open64=yes
+ac_cv_func__open64=yes
+ac_cv_func___open64=yes
+ac_cv_func_creat64=yes
+ac_cv_func_pwrite=yes
+ac_cv_func__pwrite=yes
+ac_cv_func___pwrite=yes
+ac_cv_func_pwrite64=yes
+ac_cv_func__pwrite64=yes
+ac_cv_func___pwrite64=yes

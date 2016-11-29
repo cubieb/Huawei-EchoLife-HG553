@@ -1,0 +1,107 @@
+#!/bin/bash
+
+#****************************************************************************
+#
+#  Copyright (c) 2001, 2002  Broadcom Corporation
+#  All Rights Reserved
+#  No portions of this material may be reproduced in any form without the
+#  written permission of:
+#          Broadcom Corporation
+#          16251 Laguna Canyon Road
+#          Irvine, California 92618
+#  All information contained in this document is Broadcom Corporation
+#  company private, proprietary, and trade secret.
+#
+#****************************************************************************
+
+TOP_DIR=`pwd`
+KERNELRELEASE=2.6.21.5
+
+if [ "$MOD_DIR" == "" ] ; then
+    MOD_DIR=$PROFILE/modules
+fi
+
+if [ "$FSSRC_DIR" == "" ]; then
+    FSSRC_DIR=./fs.src
+fi
+
+ROOTFS=$PROFILE/fs
+
+rm -rf $ROOTFS
+# Create file system dir
+mkdir $ROOTFS
+chmod 777 $ROOTFS
+# Copy files onto root file system
+echo "Creating target root file system..."
+cp -av $FSSRC_DIR/* $ROOTFS
+# Create directories as needed
+mkdir $ROOTFS/dev
+mkdir $ROOTFS/mnt
+mkdir $ROOTFS/proc
+mkdir $ROOTFS/var
+mkdir $ROOTFS/etc/adsl
+DEFAULTCFG=`echo $DEFAULTCFG_DIR/$BRCM_DEFAULTCFG|sed -e 's/\"//g'`
+if [ -f "$DEFAULTCFG" ]; then
+   cp -v $DEFAULTCFG $ROOTFS/etc/default.cfg; chmod a+r $ROOTFS/etc/default.cfg
+elif [ $BRCM_DEFAULTCFG != '""' ]; then
+   echo
+   echo "        No default run-time config file called $BRCM_DEFAULTCFG in $DEFAULTCFG_DIR"
+   echo "        Check your profile setting!"
+   exit 1
+else
+   echo
+fi
+# Create devices
+./makeDevs
+mknod $ROOTFS/dev/console c 5 1
+#chmod 777 $ROOTFS/dev/console
+# Create symbolic links
+ln -s /var/log/log $ROOTFS/dev/log
+ln -s /var/sysmsg $ROOTFS/etc/sysmsg
+ln -s /var/passwd $ROOTFS/etc/passwd
+ln -s /var/group $ROOTFS/etc/group
+ln -s /var/ppp/pppmsg $ROOTFS/etc/pppmsg
+ln -s /var/fyi/sys/dns $ROOTFS/etc/resolv.conf
+ln -s /var/fyi/sys/gateway $ROOTFS/etc/gateway.conf
+ln -s /var/udhcpd/udhcpd.conf $ROOTFS/etc/udhcpd.conf
+ln -s /var/udhcpd/udhcpd.leases $ROOTFS/etc/udhcpd.leases
+ln -s /var/ipsec/ipsec.conf $ROOTFS/etc/ipsec.conf
+ln -s /var/ipsec/racoon.conf $ROOTFS/etc/racoon.conf
+ln -s /var/ipsec/psk.txt $ROOTFS/etc/psk.txt
+
+if [ -x $PROFILE/special-buildFS ]; then
+   $PROFILE/special-buildFS
+fi
+
+# Copy proprietary binaries if any
+FSBIN=`ls $TOP_DIR/fs.bin|wc -l`
+if [ $FSBIN != 0 ]; then
+   echo "Copying proprietary binaries..."
+   cd $TOP_DIR
+   cp -avf fs.bin/* $ROOTFS
+fi
+
+# Stripping unneeded module symbols
+cd $MOD_DIR
+cp -a lib $TOP_DIR/$ROOTFS/.
+chown -R root:root $TOP_DIR/$ROOTFS/lib
+echo "Stripping kernel modules..."
+find $TOP_DIR/$ROOTFS/lib/modules -name "*.ko"
+#Modules that need parameters cannot be stripped
+#MODS_KEEPSYM='! -name "ip_conntrack_pt.ko" ! -name "ip_nat_pt.ko"'
+MODS_KEEPSYM='! -name "ip*.ko"'
+eval "find $TOP_DIR/$ROOTFS/lib/modules -name '*.ko' $MODS_KEEPSYM |xargs $STRIP --strip-unneeded"
+
+#delete unwanted module
+MODULE_CLEAN_UP="wldrv.ko"
+for f in $MODULE_CLEAN_UP; do \
+   eval "find $TOP_DIR/$ROOTFS/lib/modules -name $f |xargs rm -f";\
+done
+
+chmod 777 $TOP_DIR/$ROOTFS/bin/smbd
+chmod 777 $TOP_DIR/$ROOTFS/bin/nmbd
+# Continue to strip user apps and shared libraries using sstrip
+echo "Stripping userapps and shared libraries more..."
+$SSTRIP $TOP_DIR/$ROOTFS/bin/* $TOP_DIR/$ROOTFS/lib/*.so*
+
+

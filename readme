@@ -1,0 +1,5 @@
+compile command:
+
+fakeroot make PROFILE=96358GWV clean && fakeroot make PROFILE=96358GWV
+
+

@@ -1,0 +1,12 @@
+touch configure.h.in
+touch configure
+touch config.status 
+touch config.h
+touch config.guess
+touch config.sub
+touch configure.ac
+touch Makefile.am
+touch Makefile.in
+touch Makefile
+touch autogen.sh
+touch aclocal.m4

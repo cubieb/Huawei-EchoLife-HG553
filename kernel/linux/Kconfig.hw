@@ -1,0 +1,68 @@
+config SUPPORT_02
+	bool "Support 02 feature"
+	default y
+
+config SUPPORT_ATP
+	bool "Support ATP feature"
+	default y
+
+config ATP_PRSITE
+	bool "Support prsite feature"
+	default y
+
+config ATP_BRIDGE_BIND
+	bool "Support bridge bind feature"
+	default y
+
+config ATP_ROUTE_PORTBIND
+	bool "Support route port bind feature"
+	default y
+
+config ATP_PPPX
+	bool "Support pppx feature"
+	default y
+
+config ATP_ACC_RESTRICT
+	bool "Support acc restrict feature"
+	default y
+
+config ATP_BR_DEV_RELAY
+	bool "Support DHCP bridge device relay feature"
+	default y
+
+config ATP_BR_BIND_RELAY
+	bool "Support DHCP bridge bind relay feature"
+	default y
+
+config ATP_CONENAT
+	bool "CONENAT target support"
+	default y
+
+config ATP_LAN_VLAN
+	bool "LAN VLAN target support"
+	default y
+
+config ATP_QOS_NETFILTER
+	bool "add setsockopt nfmark set, depends on NET && INET && NETFILTER"
+	default n
+
+config ATP_SUPPORT_ETHUP
+	bool "Sure to support ethup"
+	default n
+	
+config ATP_SUPPORT_DOUBLEMIDD
+	bool "Sure to support double system and middleware"
+	default y
+	
+config ATP_SUPPORT_RT3052
+	bool "Sure to support ralink rt3052"
+	default y
+	
+config ATP_SUPPORT_HG553
+	bool "Sure to support type of product bcm6358(HG553)"
+	default n	
+#
+# d00107688 commont:
+# ATP_NETFILTER_XT_MATCH_MACRANGE is define in net\netfilter\Kconfig
+#
+

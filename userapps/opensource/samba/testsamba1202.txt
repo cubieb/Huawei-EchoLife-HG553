@@ -1,0 +1,17 @@
+Using FLAGS =  -g -O2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I/usr/kerberos/include  -Iinclude -I.//include -I.//ubiqx -I.//smbwrapper  -I. -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I/usr/kerberos/include -I./    
+      LIBS = -lcrypt -lresolv -lnsl -ldl -l/mips-linux/lib
+      LDSHFLAGS = -shared 
+      LDFLAGS = 
+Compiling dynconfig.c
+Compiling param/loadparm.c
+Compiling param/params.c
+Compiling smbd/files.c
+Compiling smbd/chgpasswd.c
+Compiling smbd/connection.c
+Compiling smbd/utmp.c
+Compiling smbd/session.c
+Compiling smbd/dfree.c
+Compiling smbd/dir.c
+Compiling smbd/password.c
+Compiling smbd/conn.c
+Compiling smbd/fileio.c
